@@ -1,12 +1,18 @@
 package main
 
 import (
-	"net/http"
 	"./router"
+
+	"net/http"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	userRouter := router.NewTaskRouter()
 
-	http.ListenAndServe(":3000", userRouter)
+
+	rootRouter := mux.NewRouter()
+	router.NewUserRouter(rootRouter.PathPrefix("/users").Subrouter())
+	router.NewTaskRouter(rootRouter.PathPrefix("/tasks").Subrouter())
+
+	http.ListenAndServe(":3000", rootRouter)
 }
